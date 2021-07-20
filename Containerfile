@@ -32,6 +32,7 @@ RUN apt-get update \
       libmariadb3 \
     && python3 -m pip --no-cache-dir install -U 'pip==21.0.1' \
     && python3 -m pip install --no-index --find-links=/wheels -r /requirements.txt \
+    && python3 -m pip install --no-index --find-links=/wheels ara[server] \
     && useradd ara-server \
     && chmod +x /wait \
     && rm -rf /var/lib/apt/lists/* /wheels /requirements.txt \
