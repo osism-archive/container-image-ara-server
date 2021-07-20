@@ -1,13 +1,8 @@
-FROM pypy:3.7-slim
-
 ARG VERSION
 
-ENV TZ=UTC
-
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+FROM pypy:3.7-slim as builder
 
 COPY files/requirements.txt /requirements.txt
-COPY files/run.sh /run.sh
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -15,25 +10,31 @@ RUN apt-get update \
       curl \
       gcc \
       libffi-dev \
-      libmariadb3 \
       libmariadbclient-dev \
       libssl-dev \
       libyaml-dev \
-    && pip3 install --no-cache-dir --upgrade pip \
-    && pip3 install --no-cache-dir -r /requirements.txt \
-    && if [ $VERSION != "latest" ]; then pip3 install --no-cache-dir "ara[server]==$VERSION"; else pip3 install --no-cache-dir "ara[server]"; fi \
+    && python3 -m pip install --no-cache-dir --upgrade pip \
+    && python3 -m pip wheel --no-cache-dir --wheel-dir=/wheels -r /requirements.txt \
+    && if [ $VERSION != "latest" ]; then python3 -m pip wheel--no-cache-dir --wheel-dir=/wheels "ara[server]==$VERSION"; else python3 -m pip wheel --wheel-dir=/wheels --no-cache-dir "ara[server]"; fi
+
+FROM pypy:3.7-slim
+
+ENV TZ=UTC
+
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+
+COPY --from=builder /wheels /wheels
+COPY files/requirements.txt /requirements.txt
+COPY files/run.sh /run.sh
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+      libmariadb3 \
+    && python3 -m pip --no-cache-dir install -U 'pip==21.0.1' \
+    && python3 -m pip install --no-index --find-links=/wheels -r /requirements.txt \
     && useradd ara-server \
     && chmod +x /wait \
-    && apt-get clean \
-    && apt-get remove -y \
-      build-essential \
-      gcc \
-      libffi-dev \
-      libmariadbclient-dev \
-      libssl-dev \
-      libyaml-dev \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /wheels /requirements.txt \
 
 USER ara-server
 WORKDIR /home/ara-server
