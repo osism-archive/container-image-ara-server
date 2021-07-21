@@ -7,7 +7,6 @@ COPY files/requirements.txt /requirements.txt
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
       build-essential \
-      curl \
       gcc \
       libffi-dev \
       libmariadbclient-dev \
@@ -29,6 +28,7 @@ COPY files/run.sh /run.sh
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+      curl \
       libmariadb3 \
     && python3 -m pip --no-cache-dir install -U 'pip==21.0.1' \
     && python3 -m pip install --no-index --find-links=/wheels -r /requirements.txt \
