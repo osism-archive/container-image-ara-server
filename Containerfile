@@ -12,6 +12,7 @@ RUN apt-get update \
       libmariadbclient-dev \
       libssl-dev \
       libyaml-dev \
+    && mkdir /wheels \
     && python3 -m pip install --no-cache-dir --upgrade pip \
     && python3 -m pip wheel --no-cache-dir --wheel-dir=/wheels -r /requirements.txt \
     && if [ $VERSION != "latest" ]; then python3 -m pip wheel--no-cache-dir --wheel-dir=/wheels "ara[server]==$VERSION"; else python3 -m pip wheel --wheel-dir=/wheels --no-cache-dir "ara[server]"; fi
