@@ -9,7 +9,7 @@ RUN apt-get update \
       build-essential \
       gcc \
       libffi-dev \
-      libmariadbclient-dev \
+      libmariadb-dev \
       libssl-dev \
       libyaml-dev \
     && mkdir /wheels \

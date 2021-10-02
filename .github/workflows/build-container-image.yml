@@ -20,6 +20,7 @@ name: Build container image
 
 jobs:
   build-container-image:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         version:
@@ -39,7 +40,9 @@ jobs:
         run: |
           scripts/push.sh
         env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           VERSION: ${{ matrix.version }}
           REPOSITORY: osism/ara-server
         if: github.ref == 'refs/heads/main'
