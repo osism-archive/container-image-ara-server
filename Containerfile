@@ -46,8 +46,8 @@ EXPOSE 8000
 CMD ["sh", "-c", "/wait && /run.sh"]
 HEALTHCHECK CMD curl --fail http://localhost:8000 || exit 1
 
-LABEL "org.opencontainers.image.documentation"="https://docs.osism.de" \
+LABEL "org.opencontainers.image.documentation"="https://docs.osism.tech" \
       "org.opencontainers.image.licenses"="ASL 2.0" \
       "org.opencontainers.image.source"="https://github.com/osism/container-image-ara-server" \
-      "org.opencontainers.image.url"="https://www.osism.de" \
+      "org.opencontainers.image.url"="https://www.osism.tech" \
       "org.opencontainers.image.vendor"="OSISM GmbH"
