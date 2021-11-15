@@ -45,4 +45,6 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           VERSION: ${{ matrix.version }}
           REPOSITORY: osism/ara-server
-        if: github.ref == 'refs/heads/main'
+        if: |
+          github.repository == 'osism/container-image-ara-server' &&
+          github.ref == 'refs/heads/main'
